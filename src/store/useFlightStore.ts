@@ -5,38 +5,38 @@ export interface FlightDetails {
   from: string;
   to: string;
 
-  departure: {
+  departure?: {
     time: string;
     date: string;
     airport: string;
     terminal?: string;
   };
 
-  arrival: {
+  arrival?: {
     time: string;
     date: string;
     airport: string;
     terminal?: string;
   };
 
-  duration: string;
-  stops: string;
+  duration?: string;
+  stops?: string;
 
-  aircraft: string;
-  airline: string;
+  aircraft?: string;
+  airline?: string;
   flightNumber?: string;
 
-  fareType: string;
-  baggage: {
-    checked: string;
+  fareType?: string;
+  baggage?: {
+    checked?: string;
   };
 
-  status: string;
+  status?: string;
 }
 
 interface FlightStore {
   flights: FlightDetails[];
-  addFlight: (flight: FlightDetails) => void;
+  addFlight: () => void;
   updateFlight: (id: string, updated: Partial<FlightDetails>) => void;
   removeFlight: (id: string) => void;
   setFlights: (flights: FlightDetails[]) => void;
@@ -46,9 +46,26 @@ interface FlightStore {
 export const useFlightStore = create<FlightStore>((set) => ({
   flights: [],
 
-  addFlight: (flight) =>
+  addFlight: () =>
     set((state) => ({
-      flights: [...state.flights, flight],
+      flights: [
+        ...state.flights,
+        {
+          from: "",
+          to: "",
+          departure: { time: "", date: "", airport: "", terminal: "" },
+          arrival: { time: "", date: "", airport: "", terminal: "" },
+          id: crypto.randomUUID(),
+          duration: "",
+          stops: "",
+          aircraft: "",
+          airline: "",
+          flightNumber: "",
+          fareType: "",
+          baggage: { checked: "" },
+          status: "",
+        },
+      ],
     })),
 
   updateFlight: (id, updated) =>

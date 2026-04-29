@@ -17,16 +17,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <Link href="/" className="block mb-4">
                 <>
                   <Image
-                    src="/assets/images/logo-light.svg"
+                    src="/assets/images/logo.png"
                     alt="Logo"
-                    width={231}
+                    width={350}
                     height={48}
                     className="h-auto"
                   />
                 </>
               </Link>
               <p className="text-center text-gray-400 dark:text-white/60">
-                Free and Open-Source Tailwind CSS Admin Dashboard Template
+                Golden Travels - Connects you to the world.
               </p>
             </div>
           </div>

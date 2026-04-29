@@ -18,7 +18,7 @@ export default function PassengerDetailsForm() {
                 <Input
                   placeholder="Enter passenger name"
                   value={item.name}
-                  onChange={(e) => updatePassenger(item.ticketNo, { name: e.target.value })}
+                  onChange={(e) => updatePassenger(item.id, { name: e.target.value })}
                 />
               </div>
             </div>
@@ -28,15 +28,15 @@ export default function PassengerDetailsForm() {
                 <Input
                   placeholder="Enter ticket number"
                   value={item.ticketNo}
-                  onChange={(e) => updatePassenger(item.ticketNo, { ticketNo: e.target.value })}
+                  onChange={(e) => updatePassenger(item.id, { ticketNo: e.target.value })}
                 />
               </div>
-              <Button onClick={() => removePassenger(item.ticketNo)}>-</Button>
+              <Button onClick={() => removePassenger(item.id)}>-</Button>
             </div>
           </div>
         ))}
         <div className="flex items-end  justify-end">
-          <Button onClick={() => addPassenger()}>+</Button>
+          <Button onClick={addPassenger}>+</Button>
         </div>
       </div>
     </ComponentCard>

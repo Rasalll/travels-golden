@@ -3,14 +3,15 @@ import { create } from "zustand";
 export interface PassengerDetails {
   name: string;
   ticketNo: string;
+  id: number;
 }
 
 interface PassengerStore {
   passengers: PassengerDetails[];
 
   addPassenger: () => void;
-  updatePassenger: (ticketNo: string, updated: Partial<PassengerDetails>) => void;
-  removePassenger: (ticketNo: string) => void;
+  updatePassenger: (id: number, updated: Partial<PassengerDetails>) => void;
+  removePassenger: (id: number) => void;
   setPassengers: (passengers: PassengerDetails[]) => void;
 }
 
@@ -24,18 +25,19 @@ export const usePassengerStore = create<PassengerStore>((set) => ({
         {
           name: "",
           ticketNo: "",
+          id: Date.now(),
         },
       ],
     })),
 
-  updatePassenger: (ticketNo, updated) =>
+  updatePassenger: (id, updated) =>
     set((state) => ({
-      passengers: state.passengers.map((p) => (p.ticketNo === ticketNo ? { ...p, ...updated } : p)),
+      passengers: state.passengers.map((p) => (p.id === id ? { ...p, ...updated } : p)),
     })),
 
-  removePassenger: (ticketNo) =>
+  removePassenger: (id) =>
     set((state) => ({
-      passengers: state.passengers.filter((p) => p.ticketNo !== ticketNo),
+      passengers: state.passengers.filter((p) => p.id !== id),
     })),
 
   setPassengers: (passengers) =>

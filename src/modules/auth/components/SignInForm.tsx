@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useForm } from "@/hooks/useForm";
 import { z } from "zod";
@@ -7,46 +7,45 @@ import { showSuccess, showError, showCustom, showCustom2 } from "@/utils/toast";
 
 // components
 import Button from "@/components/ui/button/Button";
-import {
-  ChevronLeftIcon,
-  EyeCloseIcon,
-  EyeIcon,
-  GoogleIcon,
-  XIcon,
-} from "@/icons";
+import { ChevronLeftIcon, EyeCloseIcon, EyeIcon, GoogleIcon, XIcon } from "@/icons";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import Checkbox from "@/components/form/input/Checkbox";
 import AuthLayout from "./AuthPageLayout";
-import { loginApi } from "../service/auth.service";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "next/navigation";
+import { IS_DEV } from "@/constants/data";
 
 export default function SignInView() {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const { login } = useAuthStore();
+  const { login, user } = useAuthStore();
+
+  useEffect(() => {
+    if (user) {
+      router.replace("/");
+    }
+  }, [user]);
 
   // Validation schema
   const schema = z.object({
-    email: z
-      .string()
-      .min(1, "Email is required")
-      .email("Please enter a valid email"),
+    email: z.string().min(1, "Email is required").email("Please enter a valid email"),
     password: z.string().min(1, "Password required"),
   });
 
   type LoginForm = z.infer<typeof schema>;
 
   const initialValues: LoginForm = {
-    email: "",
-    password: "",
+    email: IS_DEV ? "admin@golden.com" : "",
+    password: IS_DEV ? "Golder@123" : "",
   };
 
-  const { form, errors, touched, setFieldValue, handleSubmit } =
-    useForm<LoginForm>({ schema, initialValues });
+  const { form, errors, touched, setFieldValue, handleSubmit } = useForm<LoginForm>({
+    schema,
+    initialValues,
+  });
 
   const field = (name: keyof LoginForm) => ({
     error: touched[name] ? errors[name] : undefined,
@@ -54,11 +53,10 @@ export default function SignInView() {
   // on submit
   const onSignIn = async () => {
     handleSubmit(async (data) => {
-      const { status, message, data: resData } = await loginApi(data);
+      let { message, status } = login(data);
       if (status) {
-        login(resData?.user, resData?.token);
         showSuccess(message);
-        router.replace("/admin");
+        router.replace("/");
       } else {
         showError(message);
       }
@@ -136,9 +134,7 @@ export default function SignInView() {
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         value={form.password}
-                        onChange={(e) =>
-                          setFieldValue("password", e.target.value)
-                        }
+                        onChange={(e) => setFieldValue("password", e.target.value)}
                         {...field("password")}
                       />
                       <span
@@ -168,7 +164,7 @@ export default function SignInView() {
                     </Link>
                   </div>
                   <div>
-                    <Button className="w-full" size="sm">
+                    <Button type="submit" className="w-full" size="sm">
                       Sign in
                     </Button>
                   </div>

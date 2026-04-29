@@ -3,7 +3,7 @@ import { imageExtensions } from "@/constants";
 import Image from "next/image";
 import React, { FC, useEffect, useState, useRef } from "react";
 
-interface FileInputProps {
+interface FileInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name?: string;
   className?: string;
   accept?: string;

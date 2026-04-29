@@ -62,14 +62,17 @@ export const flightDetails = [
 export const passengerDetails = [
   {
     name: "Samuel 1",
+    id: 1,
     ticketNo: "A123456789",
   },
   {
     name: "Samuel 2",
     ticketNo: "B123456789",
+    id: 2,
   },
   {
     name: "Samuel 3 ",
     ticketNo: "C123456789",
+    id: 3,
   },
 ];

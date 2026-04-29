@@ -52,6 +52,17 @@ export default function FlightDetailsForm() {
                 />
               </div>
             </div>
+
+            <div className="xl:col-span-1 ">
+              <div>
+                <Label>Baggage</Label>
+                <Input
+                  placeholder="Enter Baggage"
+                  value={item.baggage.checked}
+                  onChange={(e) => updateFlight(item.id, { baggage: { checked: e.target.value } })}
+                />
+              </div>
+            </div>
             <div className="xl:col-span-1">
               <div>
                 <Label>Departure Date</Label>
@@ -66,7 +77,7 @@ export default function FlightDetailsForm() {
                 />
               </div>
             </div>
-            <div className="xl:col-span-1 flex items-end gap-2">
+            <div className="xl:col-span-1">
               <div>
                 <Label>Departure Time</Label>
                 <Input
@@ -79,12 +90,40 @@ export default function FlightDetailsForm() {
                   }
                 />
               </div>
+            </div>
+            <div className="xl:col-span-1">
+              <div>
+                <Label>Arrival Date</Label>
+                <Input
+                  placeholder="Enter arrival date"
+                  value={item.arrival.date}
+                  onChange={(e) =>
+                    updateFlight(item.id, {
+                      departure: { ...item.departure, date: e.target.value },
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className="xl:col-span-1 flex items-end gap-2">
+              <div>
+                <Label>Arrival Time</Label>
+                <Input
+                  placeholder="Enter arrival time"
+                  value={item.arrival.time}
+                  onChange={(e) =>
+                    updateFlight(item.id, {
+                      departure: { ...item.departure, time: e.target.value },
+                    })
+                  }
+                />
+              </div>
               <Button onClick={() => removeFlight(item.id)}>-</Button>
             </div>
           </div>
         ))}
         <div className="flex items-end  justify-end">
-          <Button onClick={() => {}}>+</Button>
+          <Button onClick={addFlight}>+</Button>
         </div>
       </div>
     </ComponentCard>
