@@ -1,7 +1,15 @@
 "use client";
 import React from "react";
 
-const TicketTemplate = React.forwardRef(
+interface TicketTemplateProps {
+  passengers: any[];
+  flights: any[];
+  bookingDetails: any;
+  gstDetails: any;
+  fareDetails: any;
+}
+
+const TicketTemplate = React.forwardRef<HTMLDivElement, TicketTemplateProps>(
   ({ passengers, flights, bookingDetails, gstDetails, fareDetails }, ref) => {
 
     const defaultPassengers = [

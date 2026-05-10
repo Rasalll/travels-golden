@@ -19,9 +19,6 @@ export default function PdfGenerator() {
     try {
       const imgData = await domToPng(element, {
         scale: 2,
-        features: {
-          copyStyles: true,
-        },
       });
 
       const pdf = new jsPDF({
@@ -30,10 +27,26 @@ export default function PdfGenerator() {
         format: "a4",
       });
 
-      const imgWidth = 210;
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const margin = 10; // 10mm margin
+      const imgWidth = pageWidth - (margin * 2);
       const imgHeight = (element.offsetHeight * imgWidth) / element.offsetWidth;
-      
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+      let heightLeft = imgHeight;
+      let position = margin; // Start with top margin
+
+      // Add the first page
+      pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+      heightLeft -= (pageHeight - (margin * 2));
+
+      // If content is longer than one page, add more pages
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + margin;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", margin, position, imgWidth, imgHeight);
+        heightLeft -= (pageHeight - (margin * 2));
+      }
 
       pdf.save(`Ticket_${flights[0]?.flightNumber || "Booking"}.pdf`);
     } catch (error) {
@@ -57,7 +70,7 @@ export default function PdfGenerator() {
         <TicketTemplate
           ref={printRef}
           flights={flights.length > 0 
-            ? flights.map(f => ({
+            ? flights.map((f: any) => ({
                 airline: f.airline || "Airline",
                 flightNumber: f.flightNumber || "F-000",
                 from: f.from || "Origin",
@@ -93,7 +106,7 @@ export default function PdfGenerator() {
               }]
           }
           passengers={passengers.length > 0 
-            ? passengers.map(p => ({
+            ? passengers.map((p: any) => ({
                 name: p.name || "Passenger Name",
                 ticketNo: p.ticketNo || "Ticket Number",
                 baggage: p.baggage || "15 Kg",
@@ -109,6 +122,13 @@ export default function PdfGenerator() {
           bookingDetails={{
             date: new Date().toLocaleDateString("en-GB", { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }),
             referenceId: `GT${Math.floor(1000000 + Math.random() * 9000000)}`
+          }}
+          gstDetails={{
+            name: "GOLDEN TRAVELS",
+            no: "32GSDPM8932C1ZT",
+            address: "16/580C KIZHISSERI KERALA",
+            email: "MKFAHIZ@GMAIL.COM",
+            phone: "8089794927"
           }}
           fareDetails={{
             base: "2,533.00",
